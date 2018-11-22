@@ -1,6 +1,6 @@
 package com.jenkinspip.utils
 
-jnlpImage="jenkins/jnlp-slave:3.27-1-alpine"
+jnlpImage="jenkins/jnlp-slave:3.27-1"
 
 dockerImage='docker:latest'
 mavenImage='maven:latest'
