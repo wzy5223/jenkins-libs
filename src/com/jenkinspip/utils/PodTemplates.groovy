@@ -5,6 +5,7 @@ jnlpImage="jenkins/jnlp-slave:3.27-1-alpine"
 dockerImage='docker:latest'
 mavenImage='maven:latest'
 gradleImage='gradle:latest'
+javaImage='java:latest'
 
 public void dockerTemplate(label='docker', body) {
   podTemplate(label: label,
@@ -75,6 +76,41 @@ spec:
       body()
     }
 }
+
+
+public void javadockerYamlTemplate(label='javadocker', body) {
+  podTemplate(label: label, yaml: """
+apiVersion: v1
+kind: Pod
+spec:
+  securityContext:
+    runAsUser: 0
+  containers:
+  - name: java
+    image: ${javaImage}
+    command: ['cat']
+    tty: true
+  - name: docker
+    image: ${dockerImage}
+    command: ['cat']
+    tty: true
+    volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock
+  - name: jnlp
+    image: ${jnlpImage}
+    args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
+      type: Socket
+"""
+  ) {
+      body()
+    }
+}
+
 
 public void mavenYamlTemplate(label='maven', body) {
   podTemplate(label: label, yaml: """
