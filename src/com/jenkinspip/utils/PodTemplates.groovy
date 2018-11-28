@@ -66,8 +66,6 @@ spec:
       mountPath: /usr/bin/docker
     - name: dockerlib
       mountPath: /usr/lib/libltdl.so.7
-    - name: dockeretc
-      mountPath: /etc/docker
   volumes:
   - name: dockersock
     hostPath:
@@ -79,9 +77,6 @@ spec:
   - name: dockerlib
     hostPath:
       path: /usr/lib64/libltdl.so.7.3.0
-  - name: dockeretc
-    hostPath:
-      path: /etc/docker
 """
   ) {
       body()
