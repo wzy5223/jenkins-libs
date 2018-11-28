@@ -48,6 +48,42 @@ public void gradleTemplate(label='gradle', body) {
     Template with the yaml syntax
 */
 
+public void mdockerYamlTemplate(label='mdocker', body) {
+  podTemplate(label: label, yaml: """
+apiVersion: v1
+kind: Pod
+spec:
+  securityContext:
+    runAsUser: 0
+  containers:
+  - name: jnlp
+    image: ${jnlpImage}
+    args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
+    volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock
+    - name: dockerbin
+      mountPath: /usr/bin/docker
+    - name: dockerlib
+      mountPath: /usr/lib/libltdl.so.7
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
+      type: Socket
+  - name: dockerbin
+    hostPath:
+      path: /usr/bin/docker
+  - name: dockerlib
+    hostPath:
+      path: /usr/lib64/libltdl.so.7.3.0
+"""
+  ) {
+      body()
+    }
+}
+
+
 public void dockerYamlTemplate(label='docker', body) {
   podTemplate(label: label, yaml: """
 apiVersion: v1
